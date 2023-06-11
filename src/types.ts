@@ -3,22 +3,18 @@ export interface IUserData {
   apiTokenInstance: null | string;
 }
 
-export interface IDataAddedAction {
-  type: 'DATA_ADDED';
-  payload: {
+export interface IUserDataState {
+  userData: {
     idInstance: null | string;
     apiTokenInstance: null | string;
   };
 }
 
-export interface INumberOfRecipient {
-  number: null | string;
-}
-
-export interface INumberOfRecipientAction {
-  type: 'RECIPIENT_NUMBER_ADDED';
+export interface IDataAddedAction {
+  type: 'DATA_ADDED';
   payload: {
-    number: null | string;
+    idInstance: null | string;
+    apiTokenInstance: null | string;
   };
 }
 
@@ -37,4 +33,72 @@ export interface IModalNumberOfRecipient {
   modalToGetNumberOfRecipient: {
     isOpened: boolean;
   };
+}
+
+export interface INumberOfRecipients {
+  numbers: string[];
+}
+
+export interface INumberOfRecipientsAction {
+  type: 'RECIPIENT_NUMBER_ADDED';
+  payload: {
+    numbers: string[];
+  };
+}
+
+export interface INumberOfRecipientsState {
+  numbersOfRecipients: {
+    numbers: string[];
+  };
+}
+
+export interface IDialogButtonsProps {
+  numberOfRecipient: string;
+  handleClickOnChatBtn: () => void;
+}
+
+export interface IMessageProps {
+  textMessage: string;
+  timeStamp: number;
+  typeOfMessage: string;
+}
+
+export interface INumberOfOpenedChat {
+  number: null | string;
+}
+
+export interface INumberOfOpenedChatAction {
+  type: 'NUMBER_ADDED';
+  payload: {
+    number: string;
+  };
+}
+
+export interface IUserNumberOfOpenedChat {
+  userNumberOfOpenedChat: {
+    number: string;
+  };
+}
+
+export interface IExtendedTextMessage {
+  description: string;
+  forwardingScore: null | string;
+  isForwarded: null | string;
+  jpegThumbnail: string;
+  previewType: string;
+  text: string;
+  title: string;
+}
+
+export interface IMessage {
+  key: string;
+  chatId: string;
+  extendedTextMessage: IExtendedTextMessage;
+  idMessage: string;
+  sendByApi: boolean;
+  statusMessage: string;
+  textMessage: string;
+  timestamp: number;
+  type: string;
+  typeMessage: string;
 }

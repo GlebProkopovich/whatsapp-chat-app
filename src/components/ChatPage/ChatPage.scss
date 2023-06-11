@@ -6,20 +6,21 @@
 
   .leftSide-subcontainer {
     height: 100%;
-    width: 30%;
+    width: 35%;
     display: flex;
     flex-direction: column;
     border-right: solid 0.5px rgb(128, 128, 128);
 
     .personal-info {
+      height: 60px;
       display: flex;
       justify-content: space-between;
-      background: rgb(39, 43, 41);
+      background: rgb(45, 50, 51);
       border-bottom: solid 0.5px rgb(128, 128, 128);
 
       .personalInfo-btn {
         margin: 10px;
-        color: #c3c3c3;
+        color: #d7d7d7;
         background: none;
         border: none;
         cursor: pointer;
@@ -31,11 +32,12 @@
         }
 
         &:active {
-          color: #c3c3c3;
+          color: #d7d7d7;
+          transform: scale(100%);
         }
 
         span {
-          font-size: 30px;
+          font-size: 35px;
         }
       }
     }
@@ -43,7 +45,7 @@
     .chats {
       display: flex;
       flex-direction: column;
-      background: rgb(26, 28, 27);
+      background: rgb(41, 44, 43);
       flex-grow: 1;
     }
   }
@@ -64,13 +66,13 @@
 
       span {
         font-size: 50px;
-        color: #c3c3c3;
+        color: #d7d7d7;
         margin: 20px;
       }
 
       h2 {
         font-size: 45px;
-        color: #c3c3c3;
+        color: #d7d7d7;
       }
 
       p {

@@ -15,3 +15,8 @@ export const setModalOfNumberOpened = (value: boolean) => ({
   type: 'MODAL_CHANGED',
   payload: value,
 });
+
+export const setUserNumberOfOpenedChat = (numberOfUser: string) => ({
+  type: 'NUMBER_ADDED',
+  payload: numberOfUser,
+});

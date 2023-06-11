@@ -1,0 +1,52 @@
+.dialogButton-container {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: rgb(19, 21, 19);
+  border: none;
+  border-bottom: solid 0.5px rgb(128, 128, 128);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgb(32, 35, 32);
+  }
+
+  &:active {
+    background: rgb(19, 21, 19);
+  }
+
+  .personal-photo {
+    font-size: 35px;
+    margin: 10px 0;
+    color: #d7d7d7;
+  }
+
+  .block-info {
+    height: 60px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: #d7d7d7;
+    margin: 10px 10px 10px 20px;
+
+    .numberOfRecipient {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .lastMessageInDialog {
+      font-size: 14px;
+      text-align: start;
+      overflow: hidden;
+    }
+  }
+
+  .dateOfLastMessage {
+    font-size: 14px;
+    color: #d7d7d7;
+  }
+}

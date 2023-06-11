@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import { userDataReducer } from './userData';
-import { numberOfRecipientReducer } from './numberOfrecipientReducer';
+import { numbersOfRecipientsReducer } from './numbersOfrecipientsReducer';
 import { modalToGetNumberRecipientReducer } from './isModalNumberOpenedReducer';
+import { numberOfOpenedChatReducer } from './numberOfOpenedChatReducer';
 
 export const reducers = combineReducers({
   userData: userDataReducer,
-  numberOfRecipient: numberOfRecipientReducer,
+  numbersOfRecipients: numbersOfRecipientsReducer,
   modalToGetNumberOfRecipient: modalToGetNumberRecipientReducer,
+  userNumberOfOpenedChat: numberOfOpenedChatReducer,
 });

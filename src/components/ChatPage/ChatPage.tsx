@@ -1,11 +1,20 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import ErrorModal from '../ErrorModal/ErrorModal';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setModalOfNumberOpened } from '../../state/action-creators';
+import {
+  setModalOfNumberOpened,
+  setUserNumberOfOpenedChat,
+} from '../../state/action-creators';
 import { useSelector } from 'react-redux';
-import { IModalNumberOfRecipient } from '../../types';
+import {
+  IModalNumberOfRecipient,
+  INumberOfRecipientsState,
+  IUserNumberOfOpenedChat,
+} from '../../types';
 import ModalToGetNumber from '../ModalToGetNumber/ModalToGetNumber';
+import DialogButton from '../DialogButton/DialogButton';
+import ChatDialog from '../ChatDialog/ChatDialog';
 import './ChatPage.scss';
 
 const ChatPage: FC = () => {
@@ -13,7 +22,13 @@ const ChatPage: FC = () => {
     (state: IModalNumberOfRecipient) =>
       state.modalToGetNumberOfRecipient.isOpened
   );
-  console.log(isModalOpened);
+  const numbersOfRecipients = useSelector(
+    (state: INumberOfRecipientsState) => state.numbersOfRecipients.numbers
+  );
+
+  const userNumberOfOpenedChat = useSelector(
+    (state: IUserNumberOfOpenedChat) => state.userNumberOfOpenedChat.number
+  );
 
   const navigate = useNavigate();
 
@@ -27,6 +42,10 @@ const ChatPage: FC = () => {
         : false;
     }
     return false;
+  };
+
+  const handleClickOnChatBtn = (numberOfUser: string): void => {
+    dispatch(setUserNumberOfOpenedChat(numberOfUser));
   };
 
   const handleClickOnAddDialogBtn = (value: boolean) => {
@@ -66,24 +85,38 @@ const ChatPage: FC = () => {
                 </button>
               </div>
             </div>
-            <div className="chats"></div>
+            <div className="chats">
+              {numbersOfRecipients.map((el) => {
+                return (
+                  <DialogButton
+                    numberOfRecipient={el}
+                    key={el}
+                    handleClickOnChatBtn={() => handleClickOnChatBtn(el)}
+                  />
+                );
+              })}
+            </div>
           </div>
           <div className="rightSide-subcontainer">
-            <div className="empty-chats">
-              <span className="material-symbols-outlined">call</span>
-              <h2>WhatsApp Web</h2>
-              <p>
-                Send and receive messages without the need to keep your phone
-                connected.
-                <br />
-                Use WhatsApp simultaneously on up to four linked devices and one
-                phone.
-              </p>
-              <div className="protection-content">
-                <span className="material-symbols-outlined">lock</span>
-                <p>Protected by digital encryption</p>
+            {userNumberOfOpenedChat ? (
+              <ChatDialog />
+            ) : (
+              <div className="empty-chats">
+                <span className="material-symbols-outlined">call</span>
+                <h2>WhatsApp Web</h2>
+                <p>
+                  Send and receive messages without the need to keep your phone
+                  connected.
+                  <br />
+                  Use WhatsApp simultaneously on up to four linked devices and
+                  one phone.
+                </p>
+                <div className="protection-content">
+                  <span className="material-symbols-outlined">lock</span>
+                  <p>Protected by digital encryption</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       ) : (
