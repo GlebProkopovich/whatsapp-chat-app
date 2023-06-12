@@ -1,9 +1,17 @@
-import { CSSProperties, ChangeEvent, FC, useEffect, useState } from 'react';
+import {
+  CSSProperties,
+  ChangeEvent,
+  FC,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { IMessage, IUserDataState, IUserNumberOfOpenedChat } from '../../types';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { PuffLoader } from 'react-spinners';
 import Message from '../Message/Message';
+import { useDispatch } from 'react-redux';
 import './ChatDialog.scss';
 
 const ChatDialog: FC = () => {
@@ -12,8 +20,13 @@ const ChatDialog: FC = () => {
   const [messageValue, setMessageValue] = useState<string>('');
   const [isLoaderMessageOpened, setLoaderMessageOpened] =
     useState<boolean>(false);
-  const [allMesagesHistory, setAllMesagesHistory] = useState([]);
-  const [previousResponse, setPreviousResponse] = useState(null);
+  const [allMessagesHistory, setAllMessagesHistory] = useState<any>([]);
+
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  const messageFieldRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch();
 
   const API_URL = 'https://api.green-api.com';
 
@@ -41,6 +54,12 @@ const ChatDialog: FC = () => {
     message: messageValue,
   };
 
+  const scrollToBottom = () => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = mainRef.current.scrollHeight;
+    }
+  };
+
   const handleMessageValue = (e: ChangeEvent<HTMLInputElement>) => {
     setMessageValue(e.target.value);
   };
@@ -52,6 +71,15 @@ const ChatDialog: FC = () => {
         `${API_URL}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`,
         payloadToSendMessage
       );
+      setAllMessagesHistory([
+        ...allMessagesHistory,
+        {
+          textMessage: messageValue,
+          timestamp: Date.now() / 1000,
+          typeOfMessage: 'outgoing',
+          idMessage: Math.random(),
+        },
+      ]);
       setLoaderMessageOpened(false);
       setMessageValue('');
     } catch (error) {
@@ -67,20 +95,72 @@ const ChatDialog: FC = () => {
         `${API_URL}/waInstance${idInstance}/getChatHistory/${apiTokenInstance}`,
         payloadInfoAboutDialog
       );
-      setAllMesagesHistory(response.data.reverse());
+      setAllMessagesHistory(response.data.reverse());
       setLoaderDialogOpened(false);
-      if (response.data !== previousResponse) {
-        setPreviousResponse(response.data);
-      }
     } catch (error) {
       setLoaderDialogOpened(false);
       console.log(error);
     }
   };
 
+  const getNotification = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`
+      );
+      if (response.data) {
+        setAllMessagesHistory([
+          ...allMessagesHistory,
+          {
+            textMessage:
+              response.data.body.messageData.textMessageData.textMessage,
+            timestamp: response.data.body.timestamp,
+            type: 'incoming',
+            idMessage: response.data.body.idMessage,
+          },
+        ]);
+        await axios.delete(
+          `${API_URL}/waInstance${idInstance}/deleteNotification/${apiTokenInstance}/${response.data.receiptId}`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    // getInfoAboutDialog();
-  }, [userNumberOfOpenedChat, previousResponse]);
+    getInfoAboutDialog();
+  }, [userNumberOfOpenedChat]);
+
+  useEffect(() => {
+    scrollToBottom();
+
+    const intervalId = setInterval(async () => {
+      await getNotification();
+    }, 3000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [allMessagesHistory]);
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleClickOnSendMessageBtn();
+      }
+    };
+
+    const inputElement = messageFieldRef.current;
+    if (inputElement) {
+      inputElement.addEventListener('keypress', handleKeyPress);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('keypress', handleKeyPress);
+      }
+    };
+  }, [messageValue]);
 
   return (
     <div className="chatDialog-container">
@@ -94,7 +174,7 @@ const ChatDialog: FC = () => {
           <span className="material-symbols-outlined icon">more_vert</span>
         </div>
       </div>
-      <div className="main">
+      <div className="main" ref={mainRef}>
         {isLoaderDialogOpened ? (
           <PuffLoader
             color={'#fff'}
@@ -105,7 +185,7 @@ const ChatDialog: FC = () => {
             data-testid="loader"
           />
         ) : (
-          allMesagesHistory.map((el: IMessage) => {
+          allMessagesHistory.map((el: IMessage) => {
             return (
               <Message
                 key={el.idMessage}
@@ -126,6 +206,7 @@ const ChatDialog: FC = () => {
           placeholder={isLoaderMessageOpened ? 'Loading...' : 'Write message'}
           value={messageValue}
           onChange={(e) => handleMessageValue(e)}
+          ref={messageFieldRef}
         />
 
         <span

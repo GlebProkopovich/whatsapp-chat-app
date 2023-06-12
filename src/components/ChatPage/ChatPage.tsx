@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import ErrorModal from '../ErrorModal/ErrorModal';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';

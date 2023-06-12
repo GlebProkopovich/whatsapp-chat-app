@@ -9,14 +9,15 @@ const Message: FC<IMessageProps> = ({
 }) => {
   const [timeOfMessage, setTimeOfMessage] = useState<string>('00:00');
 
-  useEffect(() => {
+  const getTimeOfMessage = (timeStamp: number): string => {
     const date = new Date(timeStamp * 1000);
-    const formattedTime = date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-    setTimeOfMessage(`${String(formattedTime).slice(0, 5)}`);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    setTimeOfMessage(getTimeOfMessage(timeStamp));
   }, []);
 
   return (

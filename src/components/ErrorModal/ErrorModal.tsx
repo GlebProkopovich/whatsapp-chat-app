@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import './ErrorModal.scss';
 import { NavLink } from 'react-router-dom';
+import './ErrorModal.scss';
 
 const ErrorModal: FC = () => {
   return (

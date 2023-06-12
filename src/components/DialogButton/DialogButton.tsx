@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import './DialogButton.scss';
 import { useSelector } from 'react-redux';
 import {
   IDialogButtonsProps,
@@ -7,12 +6,15 @@ import {
   IUserDataState,
 } from '../../types';
 import axios from 'axios';
+import './DialogButton.scss';
 
 const DialogButton: FC<IDialogButtonsProps> = ({
   numberOfRecipient,
   handleClickOnChatBtn,
 }) => {
-  const [lastMessageInDialog, setLastMessageInDialog] = useState<string>('');
+  const [lastMessageInDialog, setLastMessageInDialog] = useState<null | string>(
+    ''
+  );
   const [dateOfLastMessage, setDateOfLastMessage] = useState<string>();
 
   const API_URL = 'https://api.green-api.com';
@@ -51,7 +53,6 @@ const DialogButton: FC<IDialogButtonsProps> = ({
       setDateOfLastMessage(
         `${String(formattedTime).slice(0, 5)} ${formattedDate}`
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
